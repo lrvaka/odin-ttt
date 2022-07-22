@@ -10,6 +10,34 @@
   </head>
   <body>
     <div class="container">
+      <div class="end-game-msg">
+        <p></p>
+      </div>
+      <div class="modal-backdrop">
+        <div class="enter-player modal">
+          <div class="enter-player-header">Enter Player Names</div>
+          <div class="enter-player-input">
+            <label for="player_1">Player 1:</label>
+            <input
+              type="text"
+              id="player_1"
+              name="player_1"
+              placeholder="Player 1"
+            />
+          </div>
+          <div class="enter-player-input">
+            <label for="player_2">Player 2:</label>
+            <input
+              type="text"
+              id="player_2"
+              name="player_2"
+              placeholder="Player 2"
+            />
+          </div>
+          <button class="modal-start-game-btn">Start Game</button>
+        </div>
+      </div>
+      <div class="game-turn-indicator"></div>
       <div class="game-board">
         <div class="game-item" data-key="0"></div>
         <div class="game-item" data-key="1"></div>
@@ -20,6 +48,9 @@
         <div class="game-item bottom" data-key="6"></div>
         <div class="game-item bottom" data-key="7"></div>
         <div class="game-item bottom end" data-key="8"></div>
+      </div>
+      <div class="game-buttons">
+        <button class="start-game-btn">Start Game</button>
       </div>
     </div>
   </body>

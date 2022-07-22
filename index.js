@@ -7,8 +7,6 @@ const player2 = Player("Player 1")
 
 const TicTacToe = (function () {
   let player1Turn = true
-  const gameBoardDOM = document.body.querySelector(".game-board")
-  const gameItems = document.body.querySelectorAll(".game-item")
   const winningMoves = [
     ["0", "1", "2"],
     ["3", "4", "5"],
@@ -21,6 +19,19 @@ const TicTacToe = (function () {
   ]
   let player1Moves = []
   let player2Moves = []
+  let player1Name = "Player 1"
+  let player2Name = "Player 2"
+
+  const endGameMsg = document.body.querySelector(".end-game-msg")
+  const endGameTxt = endGameMsg.querySelector("p")
+  const playerModal = document.body.querySelector(".modal-backdrop")
+  const startGameBtn = document.body.querySelector(".start-game-btn")
+  const gameBoardDOM = document.body.querySelector(".game-board")
+  const gameItems = document.body.querySelectorAll(".game-item")
+  const turnIndicator = document.body.querySelector(".game-turn-indicator")
+  const player1Input = document.body.querySelector("#player_1")
+  const player2Input = document.body.querySelector("#player_2")
+  const modalStartGameBtn = document.body.querySelector(".modal-start-game-btn")
 
   const isWinningMove = (playerMove) =>
     winningMoves.some((e) => e.every((a) => playerMove.includes(a)))
@@ -38,9 +49,15 @@ const TicTacToe = (function () {
       player1Moves.push(move)
 
       if (isWinningMove(player1Moves)) {
+        endGameTxt.textContent = `${player1Name} Wins!`
         console.log("Player 1 Wins!")
         endGame()
+      } else if (player1Moves.length + player2Moves.length == 9) {
+        console.log("No winner")
+        endGameTxt.textContent = `Tie Game!`
+        endGame()
       } else {
+        turnIndicator.textContent = `${player2Name}'s turn`
         player1Turn = !player1Turn
       }
     } else {
@@ -52,8 +69,10 @@ const TicTacToe = (function () {
 
       if (isWinningMove(player2Moves)) {
         console.log("Player 2 Wins!")
+        endGameTxt.textContent = `${player2Name} Wins!`
         endGame()
       } else {
+        turnIndicator.textContent = `${player1Name}'s turn`
         player1Turn = !player1Turn
       }
     }
@@ -61,21 +80,44 @@ const TicTacToe = (function () {
 
   const endGame = () => {
     gameBoardDOM.removeEventListener("click", makeMove)
+
+    endGameMsg.style.display = "flex"
+    player1Turn = true
     setTimeout(() => {
       gameItems.forEach((e) => {
         e.textContent = ""
         player1Moves = []
         player2Moves = []
       })
-      startGame()
+      startGameBtn.removeAttribute("disabled")
+      startGameBtn.classList.remove("disabled")
+      turnIndicator.textContent = ""
+      endGameMsg.style.display = "none"
     }, 2500)
   }
 
   const startGame = () => {
+    playerModal.style.display = "block"
     gameBoardDOM.addEventListener("click", makeMove)
+    startGameBtn.setAttribute("disabled", "")
+    startGameBtn.classList.add("disabled")
   }
 
-  return { startGame }
+  const changePlayerName = () => {
+    playerModal.style.display = "none"
+    player1Name = player1Input.value || "Player 1"
+    player2Name = player2Input.value || "Player 2"
+    player1Input.value = ""
+    player2Input.value = ""
+    turnIndicator.textContent = `${player1Name}'s turn`
+  }
+
+  const init = () => {
+    startGameBtn.addEventListener("click", startGame)
+    modalStartGameBtn.addEventListener("click", changePlayerName)
+  }
+
+  return { init }
 })()
 
-TicTacToe.startGame()
+TicTacToe.init()
